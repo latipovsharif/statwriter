@@ -1,9 +1,12 @@
 package reports
 
 import (
-	"log"
+	"fmt"
+	"os"
+	"path"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/spf13/viper"
 )
 
 // BaseStr struct for writer
@@ -25,16 +28,38 @@ type BaseStr struct {
 
 // WriteStats write all stats to files
 func WriteStats() {
-	db, err := sqlx.Open("clickhouse", "tcp://127.0.0.1:9000?password=123")
+	fmt.Println("writing stats")
+
+	connectionString := viper.GetString("connectionString")
+	if connectionString == "" {
+		panic("connection string not set")
+	}
+
+	db, err := sqlx.Open("clickhouse", connectionString)
 	defer db.Close()
 
 	if err != nil {
-		log.Fatal(err)
+		panic("cannot open database")
 	}
 
-	writeDateStat(db, "")
-	writeCountryStat(db, "")
-	writeDeviceStat(db, PC, "")
-	writeDeviceStat(db, MOBILE, "")
-	writeSubscription(db, "")
+	reportFolderPath := viper.GetString("reportFolderPath")
+	if _, err := os.Stat(reportFolderPath); err != nil {
+		panic(fmt.Sprintf("report folder path does not exists"))
+	}
+
+	if err := writeDateStat(db, path.Join(reportFolderPath, "date_stat.xlsx")); err != nil {
+		fmt.Println(err)
+	}
+	if err := writeCountryStat(db, path.Join(reportFolderPath, "country_stat.xlsx")); err != nil {
+		fmt.Println(err)
+	}
+	if err := writeDeviceStat(db, PC, path.Join(reportFolderPath, "device_pc_stat.xlsx")); err != nil {
+		fmt.Println(err)
+	}
+	if err := writeDeviceStat(db, MOBILE, path.Join(reportFolderPath, "device_mobile_stat.xlsx")); err != nil {
+		fmt.Println(err)
+	}
+	if err := writeSubscription(db, path.Join(reportFolderPath, "subscription_stat.xlsx")); err != nil {
+		fmt.Println(err)
+	}
 }
