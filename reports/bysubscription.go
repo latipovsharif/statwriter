@@ -3,18 +3,25 @@ package reports
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 // writeSubscription get and write subscription stat to file
 func writeSubscription(db *sqlx.DB, filename string) error {
+	log.Info("retrieving subscription stats retrieved")
 	gs, err := subscriptionStat(db)
 	if err != nil {
 		errors.Wrap(err, "cannot get country stat")
 	}
 
+	log.Info("subscription stats retrieved")
+	log.Info("writing subscription stats")
+
 	if err := write(gs, filename); err != nil {
 		errors.Wrap(err, "cannot write country stat")
 	}
+
+	log.Info("finished writing subscription stats")
 
 	return nil
 }

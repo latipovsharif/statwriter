@@ -22,18 +22,24 @@ package reports
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 // writeDateStat get and write date stat to file
 func writeDateStat(db *sqlx.DB, filename string) error {
+	log.Info("retrieving date stats")
 	gs, err := dateStat(db)
 	if err != nil {
 		errors.Wrap(err, "cannot get country stat")
 	}
 
+	log.Info("date stats retrieved")
+	log.Info("writing date stats")
+
 	if err := write(gs, filename); err != nil {
 		errors.Wrap(err, "cannot write country stat")
 	}
+	log.Info("finished writing date stats")
 
 	return nil
 }

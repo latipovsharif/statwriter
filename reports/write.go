@@ -10,9 +10,9 @@ import (
 
 // write write data to filename
 func write(baseStr []BaseStr, filename string) error {
-	// if len(baseStr) == 0 {
-	// 	return nil
-	// }
+	if len(baseStr) == 0 {
+		return nil
+	}
 
 	var file *xlsx.File
 	var sheet *xlsx.Sheet

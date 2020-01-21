@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -28,7 +29,7 @@ type BaseStr struct {
 
 // WriteStats write all stats to files
 func WriteStats() {
-	fmt.Println("writing stats")
+	log.Info("start writing stats")
 
 	connectionString := viper.GetString("connectionString")
 	if connectionString == "" {
@@ -48,18 +49,20 @@ func WriteStats() {
 	}
 
 	if err := writeDateStat(db, path.Join(reportFolderPath, "date_stat.xlsx")); err != nil {
-		fmt.Println(err)
+		log.Errorf("cannot write date stats: %v", err)
 	}
 	if err := writeCountryStat(db, path.Join(reportFolderPath, "country_stat.xlsx")); err != nil {
-		fmt.Println(err)
+		log.Errorf("cannot write country stats: %v", err)
 	}
 	if err := writeDeviceStat(db, PC, path.Join(reportFolderPath, "device_pc_stat.xlsx")); err != nil {
-		fmt.Println(err)
+		log.Errorf("cannot write device pc stats: %v", err)
 	}
 	if err := writeDeviceStat(db, MOBILE, path.Join(reportFolderPath, "device_mobile_stat.xlsx")); err != nil {
-		fmt.Println(err)
+		log.Errorf("cannot write device mobile stats: %v", err)
 	}
 	if err := writeSubscription(db, path.Join(reportFolderPath, "subscription_stat.xlsx")); err != nil {
-		fmt.Println(err)
+		log.Errorf("cannot write subscription stats: %v", err)
 	}
+
+	log.Info("finished writing stats")
 }

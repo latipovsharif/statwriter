@@ -1,3 +1,4 @@
 connectionString: "tcp://127.0.0.1:9000?password=123"
 reportFolderPath: "."
-cronString: "@midnight"
+cronString: "20 * * * *"
+logPath: "."
