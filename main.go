@@ -25,8 +25,13 @@ func doJob() {
 	wg.Add(1)
 	wg.Wait()
 
+	cronString := viper.GetString("cronString")
+	if cronString == "" {
+		cronString = "@midnight"
+	}
+
 	c := cron.New()
-	c.AddFunc("@midnight", reports.WriteStats)
+	c.AddFunc(cronString, reports.WriteStats)
 	c.Start()
 }
 
