@@ -21,10 +21,25 @@ package reports
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
-// DateStat get stat grouped by date
-func DateStat(db *sqlx.DB) ([]BaseStr, error) {
+// writeDateStat get and write date stat to file
+func writeDateStat(db *sqlx.DB, filename string) error {
+	gs, err := dateStat(db)
+	if err != nil {
+		errors.Wrap(err, "cannot get country stat")
+	}
+
+	if err := write(gs, filename); err != nil {
+		errors.Wrap(err, "cannot write country stat")
+	}
+
+	return nil
+}
+
+// dateStat get stat grouped by date
+func dateStat(db *sqlx.DB) ([]BaseStr, error) {
 	var gs []BaseStr
 
 	err := db.Select(&gs, `SELECT group_field, req_count, resp_count, buy_count, click_count,

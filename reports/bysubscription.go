@@ -1,9 +1,26 @@
 package reports
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
+)
 
-// SubscriptionStat get stat grouped by subscription
-func SubscriptionStat(db *sqlx.DB) ([]BaseStr, error) {
+// writeSubscription get and write subscription stat to file
+func writeSubscription(db *sqlx.DB, filename string) error {
+	gs, err := subscriptionStat(db)
+	if err != nil {
+		errors.Wrap(err, "cannot get country stat")
+	}
+
+	if err := write(gs, filename); err != nil {
+		errors.Wrap(err, "cannot write country stat")
+	}
+
+	return nil
+}
+
+// subscriptionStat get stat grouped by subscription
+func subscriptionStat(db *sqlx.DB) ([]BaseStr, error) {
 	var s []BaseStr
 	err := db.Select(&s, `SELECT group_field, req_count, resp_count, buy_count, click_count,
                     if (buy_count = 0, 0, toFloat64(round(click_count / buy_count * 100, 3))) as ctr,

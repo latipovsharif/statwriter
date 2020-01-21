@@ -2,10 +2,25 @@ package reports
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
-// CountryStat get stat grouped by country
-func CountryStat(db *sqlx.DB) ([]BaseStr, error) {
+// writeCountryStat get and write country stat to file
+func writeCountryStat(db *sqlx.DB, filename string) error {
+	gs, err := countryStat(db)
+	if err != nil {
+		errors.Wrap(err, "cannot get country stat")
+	}
+
+	if err := write(gs, filename); err != nil {
+		errors.Wrap(err, "cannot write country stat")
+	}
+
+	return nil
+}
+
+// countryStat get stat grouped by country
+func countryStat(db *sqlx.DB) ([]BaseStr, error) {
 	var c []BaseStr
 
 	err := db.Select(&c, `SELECT group_field, req_count, resp_count, buy_count, click_count,

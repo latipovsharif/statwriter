@@ -1,7 +1,6 @@
-package writer
+package reports
 
 import (
-	"dailystatuploader/reports"
 	"fmt"
 	"os"
 
@@ -9,8 +8,8 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-// Write write data to filename
-func Write(baseStr []reports.BaseStr, filename string) error {
+// write write data to filename
+func write(baseStr []BaseStr, filename string) error {
 	// if len(baseStr) == 0 {
 	// 	return nil
 	// }

@@ -2,6 +2,7 @@ package reports
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 )
 
 type devices int
@@ -15,8 +16,22 @@ const (
 	CONSOLE devices = 4
 )
 
-// DeviceStat get stat grouped by devices
-func DeviceStat(db *sqlx.DB, d devices) ([]BaseStr, error) {
+// writeDeviceStat get and write device stat to file
+func writeDeviceStat(db *sqlx.DB, d devices, filename string) error {
+	gs, err := deviceStat(db, d)
+	if err != nil {
+		errors.Wrap(err, "cannot get country stat")
+	}
+
+	if err := write(gs, filename); err != nil {
+		errors.Wrap(err, "cannot write country stat")
+	}
+
+	return nil
+}
+
+// deviceStat get stat grouped by devices
+func deviceStat(db *sqlx.DB, d devices) ([]BaseStr, error) {
 	var dpc []BaseStr
 
 	err := db.Select(&dpc, `SELECT group_field, req_count, resp_count, buy_count, click_count,

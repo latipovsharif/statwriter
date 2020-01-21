@@ -2,26 +2,17 @@ package main
 
 import (
 	"dailystatuploader/reports"
-	"dailystatuploader/writer"
-	"fmt"
-	"log"
 
 	_ "github.com/ClickHouse/clickhouse-go"
-	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
-	connect, err := sqlx.Open("clickhouse", "tcp://127.0.0.1:9000?password=123")
-	if err != nil {
-		log.Fatal(err)
-	}
+	doJob()
+}
 
-	gs, err := reports.DateStat(connect)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	if err := writer.Write(gs, "/home/user/Desktop/date_stat.xlsx"); err != nil {
-		fmt.Println(err)
-	}
+func doJob() {
+	c := cron.New()
+	c.AddFunc("@midnight", reports.WriteStats)
+	c.Start()
 }
