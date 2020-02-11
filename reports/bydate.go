@@ -30,14 +30,14 @@ func writeDateStat(db *sqlx.DB, filename string) error {
 	log.Info("retrieving date stats")
 	gs, err := dateStat(db)
 	if err != nil {
-		errors.Wrap(err, "cannot get country stat")
+		return errors.Wrap(err, "cannot get country stat")
 	}
 
 	log.Info("date stats retrieved")
 	log.Info("writing date stats")
 
 	if err := write(gs, filename); err != nil {
-		errors.Wrap(err, "cannot write country stat")
+		return errors.Wrap(err, "cannot write country stat")
 	}
 	log.Info("finished writing date stats")
 

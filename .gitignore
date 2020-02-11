@@ -1,2 +1,5 @@
 go.sum
 dailystatuploader
+bin/
+.vscode/
+log.log

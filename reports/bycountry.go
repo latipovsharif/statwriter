@@ -11,14 +11,14 @@ func writeCountryStat(db *sqlx.DB, filename string) error {
 	log.Info("retrieving country stats")
 	gs, err := countryStat(db)
 	if err != nil {
-		errors.Wrap(err, "cannot get country stat")
+		return errors.Wrap(err, "cannot get country stat")
 	}
 
 	log.Info("country stats retrieved")
 	log.Info("writing country stats")
 
 	if err := write(gs, filename); err != nil {
-		errors.Wrap(err, "cannot write country stat")
+		return errors.Wrap(err, "cannot write country stat")
 	}
 	log.Info("finished writing country stats")
 
