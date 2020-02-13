@@ -22,14 +22,14 @@ func writeDeviceStat(db *sqlx.DB, d devices, filename string) error {
 	log.Info("retrieving device stats")
 	gs, err := deviceStat(db, d)
 	if err != nil {
-		return errors.Wrap(err, "cannot get country stat")
+		return errors.Wrap(err, "cannot get device stat")
 	}
 
 	log.Info("device stats retrieved")
 	log.Info("writing device stats")
 
 	if err := write(gs, filename); err != nil {
-		return errors.Wrap(err, "cannot write country stat")
+		return errors.Wrap(err, "cannot write device stat")
 	}
 
 	log.Info("finished writing device stats")

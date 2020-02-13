@@ -11,14 +11,14 @@ func writeSubscription(db *sqlx.DB, filename string) error {
 	log.Info("retrieving subscription stats retrieved")
 	gs, err := subscriptionStat(db)
 	if err != nil {
-		return errors.Wrap(err, "cannot get country stat")
+		return errors.Wrap(err, "cannot get subscription stat")
 	}
 
 	log.Info("subscription stats retrieved")
 	log.Info("writing subscription stats")
 
 	if err := write(gs, filename); err != nil {
-		return errors.Wrap(err, "cannot write country stat")
+		return errors.Wrap(err, "cannot write subscription stat")
 	}
 
 	log.Info("finished writing subscription stats")

@@ -37,6 +37,11 @@ clear: ## clears all binaries
 build: clear ## build and prepare project without config file
 	go build -o ./bin/dailystatuploader
 	cp ./Dockerfile ./bin/
+	cp ./date_stat.xlsx ./bin/
+	cp ./country_stat.xlsx ./bin/
+	cp ./device_pc_stat.xlsx ./bin/
+	cp ./device_mobile_stat.xlsx ./bin/
+	cp ./subscription_stat.xlsx ./bin/
 
 build-prod: build ## build and copy prod config file
 	cp ./config.yaml ./bin/config.yaml

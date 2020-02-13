@@ -1,4 +1,4 @@
-connectionString: "tcp://clickhouse1?username=chuser&password=GnQHvN2wtDMmRV7auZGZUKQov4BMYG82&database=rtb_dev_shard"
+connectionString: "tcp://clickhouse1:9000?username=chuser&password=GnQHvN2wtDMmRV7auZGZUKQov4BMYG82&database=rtb_dev_shard"
 reportFolderPath: "."
 cronString: "@midnight"
 logPath: "."
