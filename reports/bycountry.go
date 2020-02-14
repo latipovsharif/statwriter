@@ -41,7 +41,7 @@ func countryStat(db *sqlx.DB) ([]BaseStr, error) {
 		FROM (
 			SELECT req_device_geo_country AS group_field, count(*) as req_count
 			FROM bid_requests
-			WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(req_date_time) = toDate(now())
+			WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(req_date_time) = (toDate(now()) - 1)
 			GROUP BY group_field
 		)
 		ALL LEFT JOIN (
@@ -49,7 +49,7 @@ func countryStat(db *sqlx.DB) ([]BaseStr, error) {
 			FROM (
 				SELECT req_device_geo_country AS group_field, count(*) as resp_count
 				FROM bid_responses
-				WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(resp_date_time) = toDate(now())
+				WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(resp_date_time) = (toDate(now()) - 1)
 				GROUP BY group_field 
 			)
 			ALL LEFT JOIN (
@@ -57,13 +57,13 @@ func countryStat(db *sqlx.DB) ([]BaseStr, error) {
 				FROM (
 					SELECT req_device_geo_country AS group_field, count(*) as buy_count, sum(buyout_price) as buyout_sum, sum(resp_seat_bid_bid_price) as first_sum
 					FROM buyouts
-					WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(buyout_date_time) = toDate(now())
+					WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(buyout_date_time) = (toDate(now()) - 1)
 					GROUP BY group_field
 				)
 				ALL LEFT JOIN (
 					SELECT req_device_geo_country AS group_field, count(*) as click_count, sum(click_price) as click_sum
 					FROM clicks
-					WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(buyout_date_time) = toDate(now())
+					WHERE req_site_name != '' AND req_ssp_id IN (2) AND toDate(buyout_date_time) = (toDate(now()) - 1)
 					GROUP BY group_field
 				)
 				USING(group_field)
