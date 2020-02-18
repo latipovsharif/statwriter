@@ -3,6 +3,7 @@ package reports
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/tealeg/xlsx"
@@ -34,6 +35,7 @@ func write(baseStr []BaseStr, filename string) error {
 
 	for _, item := range baseStr {
 		row := sheet.AddRow()
+		row.AddCell().Value = time.Now().Format("2006-01-02")
 		row.AddCell().Value = item.GroupField
 		row.AddCell().Value = fmt.Sprintf("%d", item.RequestCount)
 		row.AddCell().Value = fmt.Sprintf("%d", item.ResponseCount)
